@@ -12,6 +12,14 @@ It should eventually serve users across many countries and the major desktop,
 mobile and browser platforms. Both full-device VPN apps and browser extensions
 are part of the vision.
 
+COMPETITIVE AMBITION
+Build a serious competitor to powerful VPN brands, including NordVPN and Urban
+VPN, and aim to outperform leading providers in the areas users value most.
+The long-term objective is to become a globally trusted first-choice VPN company,
+with a product people choose because its protection, experience and value are
+demonstrably excellent. This is a business and engineering ambition, not a claim
+that our current repository already matches or exceeds an established service.
+
 The product promise should be understandable:
 "Connect securely, understand what is protected, and stay in control of your data."
 
@@ -85,8 +93,11 @@ AMNEZIA SOURCE
     - Privileged desktop service and mobile platform integration.
     - SSH/Docker-based self-hosted server provisioning.
     - Protocol configurators and installation scripts, including WireGuard,
-      AmneziaWG, OpenVPN and Xray-related pathways.
-    - Configuration import/export and client-management components.
+      AmneziaWG, OpenVPN, IKEv2/IPsec and Xray-related pathways, with documented
+      Cloak/Shadowsocks-related options subject to platform/protocol review.
+    - Configuration import/export, sharing and client-revocation components.
+    - Split-tunneling and kill-switch implementation areas; their source presence
+      is not evidence of tested protection in our eventual product.
     - Existing Qt tests and platform build/dependency recipes.
 
   Important boundaries:
@@ -274,6 +285,8 @@ Before any public release:
     updates, dependencies and third-party infrastructure.
   - Test IPv4/IPv6 and DNS leaks, browser WebRTC coverage, wrong routes, tunnel
     failure, daemon crash, reboot, sleep/wake and network switching.
+  - Test captive portals, enterprise policies, restricted Wi-Fi and competing
+    network/security applications on the platforms we actually support.
   - Test missing/expired/revoked credentials, unauthorized administration,
     private-network/metadata access, quotas and any claimed fail-closed behavior.
   - Test signed-update verification, tampered packages, rollback policy and
@@ -328,6 +341,45 @@ availability, battery impact, update success and support resolution. Establish
 baselines before choosing numeric targets. Publish the tested OS/network context
 and sample size; a benchmark from one device is not a universal speed claim.
 
+COMPETITIVE STRATEGY: HOW WE INTEND TO WIN
+  1. Trust and protection: Test failure behavior, protect device keys, minimize
+     data collection, publish clear limitations and commission independent review.
+  2. Everyday reliability: Make connection, roaming, reconnect, installation and
+     updates dependable. A large feature list cannot compensate for failures.
+  3. Consistent speed: Improve real workloads and regional capacity. Compare
+     latency, throughput, loss and stability using disclosed test conditions.
+  4. Simple, accessible design: Fast onboarding, understandable protection states,
+     useful errors and consistent core controls across supported devices.
+  5. Broad practical coverage: Deliver tested desktop/mobile apps and browser
+     products, then routers/TVs where technically and operationally justified.
+  6. Useful privacy features: Add DNS controls, split tunneling, multihop and
+     selected advanced transports when they meet a real need and pass testing.
+  7. Honest value: Offer transparent terms, clearly explained limits and a
+     sustainable service. Evaluate affordable plans and a bounded free offering
+     only when their actual operating costs are covered.
+  8. Effective support: Provide clear recovery guides, privacy-preserving
+     diagnostics, human escalation and optional carefully constrained AI help.
+
+Start by identifying a customer group whose needs we can serve particularly
+well, such as people needing dependable cross-device protection and clear privacy
+controls. Validate that choice through interviews and a private pilot before
+assuming we understand every customer in every market.
+
+Maintain a dated benchmark scorecard against NordVPN, Urban VPN and other relevant
+providers. Use verified current product information, authorized test accounts,
+comparable devices/networks and reproducible workloads. Record platform, region,
+configuration, measurement method and limitations. Rival products and our own
+product will change, so comparisons need rechecking.
+
+Do not invent claims about a competitor's security, logging, speed or business
+practices. Publish comparisons only when evidence supports them. Competitor
+subscriptions or benchmark infrastructure require an approved budget before use.
+
+The first competitive milestone is a proven advantage for a defined group on
+one or two important dimensions. Later milestones broaden that advantage across
+platforms, locations and customer needs. Pursue leadership through sustained
+engineering and earned trust; there is no guaranteed date for becoming number one.
+
 11. WHAT AI CAN HELP US DO
 
 Useful during development now:
@@ -378,6 +430,10 @@ SECOND YEAR: APPROXIMATELY 12-24 MONTHS
   permit it, reliable multi-region operations, mature device management, recovery
   drills and an independently assessed release. Consider paid plans only after
   payment, privacy, tax, consumer and support requirements are addressed.
+
+  At this stage, target evidence-backed competitive advantages in selected
+  categories and publish appropriately scoped comparisons. Broad market
+  leadership remains an ambition dependent on execution, funding and adoption.
 
 LONGER TERM: 24 MONTHS AND BEYOND
   Consider broader regional presence, enterprise/device policy, routers, selected
@@ -438,6 +494,11 @@ Before a worldwide service, budget explicitly for:
 Existing free resources may help a limited pilot. They do not establish a
 permanent free global business. Do not provision paid services, start chargeable
 trials or publish to stores without explicit owner authorization.
+
+An early private development proof may use distribution methods permitted by its
+platform. Public releases wait for required signing, entitlements, distribution
+access and validation. Development testing does not bypass mandatory platform
+requirements or establish public-release readiness.
 
 Possible future model: a transparent paid service with bounded capacity and
 clear device limits. A free tier is optional only if its costs and abuse controls
