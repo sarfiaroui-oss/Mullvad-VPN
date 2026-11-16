@@ -1,0 +1,553 @@
+WORLD-CLASS VPN PLATFORM: PROJECT IDEA AND DELIVERY PLAN
+Prepared: 17 November 2026
+Status: Product proposal grounded in the preserved source archives.
+Planning horizon: Initial proof, first year, second year, and longer-term research.
+The time ranges below are planning estimates, not release commitments.
+
+1. THE PRODUCT WE WANT TO BUILD
+
+Create an independently operated privacy and secure-connectivity platform with
+our own identity, user experience, accounts, infrastructure and release process.
+It should eventually serve users across many countries and the major desktop,
+mobile and browser platforms. Both full-device VPN apps and browser extensions
+are part of the vision.
+
+The product promise should be understandable:
+"Connect securely, understand what is protected, and stay in control of your data."
+
+World-class should mean measured security, reliability, usable design, honest
+privacy practices, responsive support and sustainable operations. It should not
+mean a long list of untested buttons or countries that do not have real gateways.
+
+Worldwide availability is an ambition. Supporting every device, network, country
+and legal jurisdiction without exceptions is not a realistic guarantee. We will
+publish an explicit support matrix and expand it as each target passes testing.
+
+This plan is the single requested project-idea file. The old AI-generated planning
+documents were removed; they are not evidence of implemented product features.
+
+2. WHAT WE ALREADY HAVE, AND WHAT WE HAVE ACTUALLY COMPLETED
+
+Preserved project assets:
+  - mullvadvpn-app-main.zip
+  - amnezia-client-dev.zip
+  - tools/extract_upstreams.py
+  - .gitignore and .editorconfig
+  - Extracted sources under build/upstream/mullvad/ and build/upstream/amnezia/.
+
+Completed repository work:
+  - Inspected and extracted both application archives.
+  - Organized them into independent upstream source trees.
+  - Verified 8,485 regular files and four symlinks against the archives.
+  - Preserved original archive contents, licenses and internal build layouts.
+  - Removed the old outer planning Markdown/text files and catalogs.
+  - Pushed cleanup and source-preservation changes directly to main.
+
+This is useful completed work. It is not proof that our own VPN service runs.
+Neither upstream app has been built or runtime-tested in this environment.
+Our own Chrome extension, customer backend and worldwide gateway fleet do not
+exist yet. Source availability is different from a working operated service.
+
+The extraction helper can recreate the local trees from the tracked archives:
+  cd /workspace/Mullvad-VPN
+  python3 tools/extract_upstreams.py
+
+The build/upstream directories are ignored by Git. Do not make our only copy of
+new work there. Before application development, create an explicitly tracked
+component or fork location. Before deleting generated sources, inspect added
+files as well as modified/missing files; the helper does not detect extra files.
+
+3. WHAT THE TWO CODEBASES PROVIDE
+
+MULLVAD SOURCE
+  Available in source:
+    - Rust VPN daemon, CLI and native networking components.
+    - Firewall, routing, DNS and tunnel-state handling.
+    - TypeScript/React/Electron desktop interface.
+    - Android frontend with shared Rust components.
+    - A separate Swift-based iOS implementation.
+    - Local management interfaces and existing test infrastructure.
+
+  Important boundaries:
+    - Much normal operation expects Mullvad's account, device and relay APIs.
+    - Its operated account backend and worldwide network are not included here.
+    - Its local management API is not a ready public account/control service.
+    - Its release URLs and verification keys belong to Mullvad. Our releases
+      need our own signing authority and update infrastructure.
+    - A direct custom WireGuard endpoint path exists and is a promising small
+      independent-gateway proof. It must be built, audited and tested first.
+    - This path does not automatically inherit every upstream feature, such as
+      quantum-resistant tunnel support or DAITA.
+
+AMNEZIA SOURCE
+  Available in source:
+    - C++/Qt/QML cross-platform native application components.
+    - Privileged desktop service and mobile platform integration.
+    - SSH/Docker-based self-hosted server provisioning.
+    - Protocol configurators and installation scripts, including WireGuard,
+      AmneziaWG, OpenVPN and Xray-related pathways.
+    - Configuration import/export and client-management components.
+    - Existing Qt tests and platform build/dependency recipes.
+
+  Important boundaries:
+    - Self-hosted functionality is useful for an owner-operated prototype.
+    - Premium gateway/subscription clients do not include their remote backend.
+    - Its desktop local-proxy feature depends on upstream Premium configuration;
+      it is not already our standalone Chrome extension or generic gateway.
+    - A bundled SOCKS proxy recipe logs destination-related information and
+      does not by itself establish encrypted browser-to-gateway transport.
+      Privacy and transport behavior must be redesigned or validated before use.
+
+Both projects have valuable existing engineering. Both also have platform,
+dependency, licensing and operational assumptions that we must understand.
+Neither archive is a complete ready-to-launch worldwide company.
+
+4. REUSE STRATEGY: BUILD ON EXISTING WORK
+
+Keep both source archives and review both approaches. Select one primary native
+foundation after a small build and connection comparison. Keep the other as a
+reference or a separately justified component, rather than merging two complete
+native applications into one tree.
+
+Initial comparison:
+  A. Mullvad path: Restore build inputs, build a Linux daemon/CLI, and assess
+     its existing direct custom WireGuard endpoint against our test gateway.
+     Measure the work needed to separate provider-specific behavior.
+  B. Amnezia path: Restore build inputs, build a Linux client, and assess its
+     existing self-hosted provisioning/configuration flow on an authorized host.
+
+Choose using evidence: build reproducibility, security boundaries, ownership of
+endpoints, test results, license obligations, maintenance effort and product fit.
+Do not choose solely because one app has more screens or more languages.
+
+Retain upstream licenses and copyright notices, use original branding, and review
+the exact dependencies we distribute. Both archives contain GPLv3 license texts;
+Mullvad manifests specify GPL-3.0-or-later. Third-party terms also apply. A modified
+or translated derivative does not automatically escape its license obligations.
+The product's own licensing/distribution model still needs a deliberate decision.
+
+5. ONE PRODUCT, TWO TYPES OF NETWORK PROTECTION
+
+FULL-DEVICE VPN
+  Native apps use a supported OS VPN/tunnel interface. They route the traffic
+  covered by their tested configuration through an authorized VPN gateway.
+  WireGuard is the initial protocol candidate, with mature implementations.
+  OS-specific firewall, DNS, route and reconnect handling remain essential.
+
+BROWSER PROXY
+  A browser extension manages supported browser proxy settings and connects to
+  an authenticated proxy endpoint using a tested encrypted transport.
+  It protects the supported browser traffic, not the entire operating system.
+  Browser-to-proxy encryption and website HTTPS are separate requirements.
+  Website HTTPS must remain end-to-end; we will not intercept website TLS.
+
+SHARED PLATFORM
+  Both products can share accounts, device enrollment, allowed locations, policy
+  definitions, common schemas, original design assets and support tooling.
+  They need separate protocol credentials and separate traffic-coverage tests.
+
+Connection structure:
+  Native app -------- VPN tunnel --------> Regional VPN gateway ---> Internet
+  Browser extension -- TLS proxy link ---> Regional proxy gateway -> Internet
+  Both clients ------- HTTPS control ----> Owned account/configuration service
+
+Customer data traffic should not pass through the account API. Administrative
+control must be isolated from public gateway traffic. Region records should state
+which protocols, platforms, addresses and capabilities they actually support.
+
+If the native app and extension run together, define explicit configuration
+ownership and precedence. Test double-routing, extension conflicts and restoration
+of earlier settings; do not let two clients silently fight over network behavior.
+
+6. LANGUAGE STRATEGY
+
+Use a small number of primary languages, with clear component boundaries:
+  - TypeScript: Chrome extension, shared application schemas, web/admin UI and
+    a small Node-based control service, subject to dependency selection.
+  - Rust: Native networking foundation if the Mullvad route is selected.
+  - C++/QML: Retain these if the Amnezia route is selected instead.
+  - Swift/Kotlin/other platform bindings: Retain where OS integration requires
+    them or where preserving the existing implementation is the practical choice.
+
+The objective is shared logic and maintainable interfaces. A single language for
+every driver, mobile entitlement, tunnel library and UI is not a useful initial
+requirement. Standardizing most application code is achievable; translating all
+native networking code would be a substantial separate engineering program.
+
+AI-assisted migration can help with code analysis, adapters and tests. It cannot
+automatically prove the behavior or security of translated networking code.
+Any migration should have a narrow component boundary, compatibility tests,
+benchmarks and a rollback plan. No whole-engine rewrite is required to begin.
+
+7. PLATFORM SUPPORT PLAN
+
+Linux:
+  First representative native build target in the cloud environment. Validate
+  daemon/client behavior, routing, DNS, firewall integration and recovery.
+
+Windows:
+  Add supported Windows versions and x64/ARM targets as justified. Validate
+  tunnel/driver dependencies, firewall rules, installation, updates and sleep/
+  network transitions. Production signing/distribution has external prerequisites.
+
+macOS:
+  Use supported networking/extension mechanisms, signing and notarization as
+  applicable. Validate permissions, recovery and DNS behavior on real machines.
+
+Android:
+  Build a native VPNService-based app through the selected foundation. Test
+  battery/background limits, permission lifecycle, network changes and always-on/
+  lockdown behavior where supported. These must be tested on actual Android.
+
+iPhone/iPad:
+  Use supported NetworkExtension APIs with required provisioning/entitlements.
+  Development and validation require the appropriate Apple tooling and devices.
+  Linux cloud tests cannot substitute for iOS validation or distribution approval.
+
+Desktop browser extensions:
+  Chrome first, then Chromium variants/Edge and Firefox after API/store reviews
+  and browser-specific tests. Evaluate Safari separately; do not assume it has
+  identical proxy-control capabilities or packaging requirements.
+
+Mobile browsers:
+  Standard Android/iOS Chrome does not run desktop Chrome extensions. Native
+  mobile VPN apps provide the corresponding product path.
+
+ChromeOS:
+  Evaluate supported native/Android VPN paths and the separate browser extension.
+  Verify coverage for browser, Android and Linux-container traffic independently;
+  do not assume one API protects all three.
+
+Routers, smart TVs and other devices:
+  Later offer tested WireGuard configuration export or supported router packages.
+  Hardware, firmware and app-store constraints vary. Consoles and restricted
+  devices may require router-level protection instead of a native application.
+  Evaluate Android TV and other TV applications individually, including remote-
+  control navigation and whether the platform exposes a usable VPN interface.
+
+Publish supported OS versions, architectures, browsers, limitations and end-of-
+support policies. "Every PC/device ever made" is not an achievable guarantee.
+
+8. THE BACKEND AND REGIONAL NETWORK WE NEED TO OWN
+
+Control service:
+  Account authentication/recovery, device registration, per-device keys or scoped
+  credentials, revocation, configuration versioning, regional endpoint catalog,
+  capabilities, entitlements and private administration. Use established security
+  libraries and server-enforced authorization.
+
+Gateway management:
+  Secure host bootstrap, reproducible images/configuration, patching, peer/grant
+  lifecycle, protected management access, firewall policy, capacity controls,
+  health checks, rotation and rollback. Keep gateway secrets out of public apps.
+
+Native key management:
+  Prefer device-generated private keys kept in protected local storage. Register
+  only the material the service needs. Enforce revocation at the gateway and test
+  its behavior for existing connections, not just new login attempts.
+
+Browser authentication:
+  Issue short-lived scoped proxy grants. Match authentication challenges to the
+  approved proxy host/port and challenge type. Test malicious website challenges,
+  expired grants, quota exhaustion and active-session revocation semantics.
+
+DNS and egress:
+  Provide controlled resolver behavior and verify actual leak coverage. Enforce
+  appropriate gateway policies against access to management/private infrastructure.
+  Define which destination restrictions and protocols the product supports.
+
+Regional expansion:
+  Start with one authorized gateway. Add regions after real egress/location,
+  provider permission, bandwidth cost, latency, reliability and capacity checks.
+  A region label must describe the actual routing arrangement, including any
+  virtual-location distinction. A country list is not physical infrastructure.
+
+Resilience:
+  Plan health-aware selection, redundant components, certificate renewal,
+  configuration rollback, backups and tested recovery. Multi-provider diversity
+  can become useful later, but it increases operational complexity and cost.
+
+9. SECURITY AND PRIVACY REQUIREMENTS
+
+Before any public release:
+  - Review the threat model for browsers, native apps, gateways, administrators,
+    updates, dependencies and third-party infrastructure.
+  - Test IPv4/IPv6 and DNS leaks, browser WebRTC coverage, wrong routes, tunnel
+    failure, daemon crash, reboot, sleep/wake and network switching.
+  - Test missing/expired/revoked credentials, unauthorized administration,
+    private-network/metadata access, quotas and any claimed fail-closed behavior.
+  - Test signed-update verification, tampered packages, rollback policy and
+    signing-key recovery/rotation. Preserve TLS and artifact verification.
+  - Keep private keys and account secrets out of logs, support exports and AI tools.
+  - Protect administrator access with strong authentication, minimal privileges
+    and controlled audit records.
+  - Review direct and transitive dependencies, licenses and vulnerability fixes.
+  - Run restore and incident-response exercises.
+
+Privacy design:
+  Avoid collecting browsing histories or traffic contents. Define exactly which
+  account, security, operational and billing metadata is retained, why, for how
+  long, and who can access it. Minimize and bound any necessary diagnostics.
+  Optional analytics should have explicit consent and minimal data.
+
+Do not claim "no logs", "anonymous", "audited" or "leak-proof" simply because
+an upstream project uses similar words. Our implementation, hosting practices
+and policies need their own evidence and independent assessment.
+
+10. FEATURE PRIORITIES
+
+INITIAL PROOF / PRIVATE PILOT
+  - Reproducible source inputs and one working native build.
+  - One real authorized gateway; truthful connection state and observed route.
+  - Connect/disconnect, secure configuration and basic reconnect behavior.
+  - Tested DNS/routing restoration and failure behavior.
+  - A minimal Chrome extension with separate authenticated proxy validation.
+  - Device/grant revocation and basic operational controls.
+
+FIRST RELIABLE PRODUCT
+  - Polished accessible interface, clear error messages and installation/recovery.
+  - Tested kill-switch/lockdown behavior where supported, with explicit limits.
+  - Secure updates, per-device management and documented privacy practices.
+  - More supported platforms and a small number of reliable real regions.
+  - Support diagnostics that redact private data.
+
+ADVANCED FEATURES AFTER THE FOUNDATION IS STABLE
+  - Split tunneling, with per-platform coverage documented.
+  - Optional DNS-based ad/malware filtering, with transparent limitations.
+  - Automatic gateway selection based on measured health/latency/load.
+  - Multihop for justified threat models, with performance tradeoffs explained.
+  - Mature obfuscation transports on tested platforms where lawful and useful.
+  - Router configuration support and team/device policy management.
+
+Avoid implementing all advanced features at once. Each needs an owner, tested
+platforms, security/privacy review, operating cost and an acceptance gate.
+
+Measure product quality using reproducible conditions: successful connection
+rate, connection time, reconnect recovery, latency/throughput/loss, per-region
+availability, battery impact, update success and support resolution. Establish
+baselines before choosing numeric targets. Publish the tested OS/network context
+and sample size; a benchmark from one device is not a universal speed claim.
+
+11. WHAT AI CAN HELP US DO
+
+Useful during development now:
+  Source navigation, dependency review assistance, test generation, debugging,
+  migration planning, documentation, translation drafts and accessibility checks.
+  Human review and executable tests remain necessary for security-sensitive work.
+
+Possible product features after validation:
+  - A support assistant using approved documentation and redacted diagnostics.
+  - Local troubleshooting explanations for connection failures.
+  - Optional endpoint recommendations using minimal network-health measurements.
+  - Aggregate operational anomaly detection that does not inspect browsing content.
+
+Guardrails:
+  AI is optional to the VPN's operation. Connection, authentication and safe
+  failure behavior must work without an AI service. Do not send private keys,
+  browsing histories, traffic contents or raw sensitive logs to an AI provider.
+  AI-generated firewall or routing changes require constrained validation and
+  rollback; a support chatbot must not have unrestricted administrative authority.
+
+Existing paid Codex access is a development resource. It does not provide free
+production AI API usage, worldwide servers or unlimited engineering capacity.
+
+12. ONE-YEAR, TWO-YEAR AND LONGER-TERM HORIZONS
+
+The following are conditional work horizons. Team capacity, access to test
+devices, licensing, budget and test results determine actual dates. Completing
+one horizon is not automatic authorization to spend or launch publicly.
+
+FOUNDATION: APPROXIMATELY FIRST 0-3 MONTHS
+  Restore exact inputs; compare native foundations; build a Linux proof; validate
+  one gateway and a browser proof; decide ownership/API boundaries and privacy
+  requirements. Exit only with reproducible commands and real functional tests.
+
+PRIVATE PRODUCT: APPROXIMATELY 3-6 MONTHS
+  Stabilize the first desktop target and Chrome product, establish secure updates
+  and operations, and run a controlled private pilot. Record outages, recovery,
+  leak/failure results and actual costs. No public-readiness claim from a demo.
+
+PLATFORM EXPANSION: APPROXIMATELY 6-12 MONTHS
+  Add the next desktop/mobile targets according to available tooling and devices.
+  Expand a few verified regions only with an approved operating budget. Improve
+  onboarding, support and telemetry minimization. Arrange independent review
+  when feasible; do not claim it has happened until it has.
+
+SECOND YEAR: APPROXIMATELY 12-24 MONTHS
+  Aim for well-tested major desktop/mobile platforms, browser support where APIs
+  permit it, reliable multi-region operations, mature device management, recovery
+  drills and an independently assessed release. Consider paid plans only after
+  payment, privacy, tax, consumer and support requirements are addressed.
+
+LONGER TERM: 24 MONTHS AND BEYOND
+  Consider broader regional presence, enterprise/device policy, routers, selected
+  advanced privacy transports, specialist accessibility/localization and more
+  resilient control services. Expand according to demonstrated demand and capacity.
+
+Research candidates, not promised features:
+  Validated hybrid/post-quantum tunnel protection; privacy-preserving network
+  measurement; stronger traffic-analysis defenses; local-first diagnostic models;
+  more efficient routing/transport selection and emerging platform integrations.
+
+Standard WireGuard is not automatically post-quantum. Any additional protection
+needs reviewed protocols, compatible client/server implementations, downgrade
+policy, performance evidence and platform-specific tests. Never invent crypto.
+
+AI progress may reduce some development effort. It does not make platform rules,
+network physics, independent testing or sustainable operations disappear.
+
+13. WHAT IS NOT POSSIBLE TO PROMISE
+
+  - Protection for every device or every obsolete OS: platforms differ, and
+    unsupported systems can lack required APIs and security updates.
+  - A desktop browser extension protecting every app on a device: it controls
+    only the traffic supported by its browser/API configuration.
+  - Desktop Chrome extensions running unchanged on standard mobile Chrome.
+  - Guaranteed connectivity in every country and network forever: blocking,
+    local rules, outages and provider restrictions can change.
+  - Permanent access to every streaming site, bank or website: services can
+    block VPN addresses or enforce independent account/location restrictions.
+  - Absolute anonymity: accounts, cookies, browser fingerprints, GPS and endpoint
+    compromise are outside what a tunnel alone can solve.
+  - Unlimited speed or zero latency: distance, congestion, server capacity and
+    the user's connection impose limits.
+  - Protection without an available underlying Internet connection.
+  - A guarantee of zero vulnerabilities or zero leaks forever: security requires
+    continuous testing, updates, transparent limitations and incident response.
+  - A reliable worldwide gateway fleet, bandwidth and support at $0 incremental
+    cost indefinitely, without independently available and verified resources.
+  - A secure automatic conversion of all native code into one language.
+  - Inheriting an upstream provider's infrastructure, signing keys, trademarks
+    or audit conclusions merely by possessing its open source.
+
+Some limits can be reduced through engineering. Absolute guarantees and physical
+or platform constraints should not become marketing promises after one or two years.
+
+14. COST, OPERATIONS AND BUSINESS REALITY
+
+The current additional-spending limit remains $0 unless the owner changes it.
+Within existing access we can inspect code, develop, run supported local tests
+and prepare reproducible deployment tooling. Real remote proofs need authorized
+resources whose usage and terms have been verified.
+
+Before a worldwide service, budget explicitly for:
+  Servers, IPv4/IPv6 resources, bandwidth/egress, DNS and operations; test devices
+  and platform tooling; signing/distribution accounts where applicable; security
+  assessment; support, incident response, privacy/legal work and payment costs.
+
+Existing free resources may help a limited pilot. They do not establish a
+permanent free global business. Do not provision paid services, start chargeable
+trials or publish to stores without explicit owner authorization.
+
+Possible future model: a transparent paid service with bounded capacity and
+clear device limits. A free tier is optional only if its costs and abuse controls
+are sustainable. Avoid promising unlimited free worldwide bandwidth. Do not
+finance the service by silently selling browsing data or injecting advertising.
+
+Define ownership for patching, release signing, abuse response, privacy requests,
+customer support and on-call incidents before public launch. AI can assist those
+people; it is not the accountable operator.
+
+15. SOURCE STRUCTURE WHEN IMPLEMENTATION STARTS
+
+Keep the current ZIPs and existing extraction code. Add tracked development
+components only when they contain real work; avoid an empty multi-platform scaffold.
+
+Possible future layout:
+  apps/extension/           Browser-specific product
+  apps/desktop/             Selected desktop UI and native integration
+  apps/mobile/              Platform applications as actually introduced
+  services/control-api/     Owned accounts/devices/configuration backend
+  packages/shared/          Shared schemas and application logic
+  native/                   Selected core/fork or pinned integration
+  infrastructure/           Gateway deployment and operating configuration
+  tests/                    Cross-component and release acceptance tests
+
+This is a proposed layout, not a list of completed components. A tracked upstream
+fork should retain its internal workspace paths and notices. Thin adapters can
+connect it to our services without reorganizing every upstream source directory.
+
+Work directly on main as requested. Commit and push coherent checkpoints no more
+than five minutes apart while making changes. Keep the number of planning files
+small; add documentation only when it helps operate, build or review real work.
+
+16. FIRST IMPLEMENTATION TASKS AND ACCEPTANCE GATES
+
+Task 1: Establish trusted, complete native build inputs.
+  Both ZIPs omit declared submodules and contain no Git metadata for recovering
+  gitlink revisions locally. Verify corresponding upstream revisions and obtain
+  exact dependencies through trusted sources. Keep checksum/signature/TLS checks.
+  Gate: Inputs and toolchain are identifiable and a chosen target can be built.
+
+Task 2: Build one Linux native daemon/client and run meaningful existing tests.
+  Select target/features before costly builds; use locked dependency installation.
+  Gate: Build succeeds and relevant tests execute with recorded outcomes.
+
+Task 3: Test one owned/authorized native gateway in an isolated environment.
+  Assess Mullvad's direct custom endpoint or Amnezia's self-hosted flow, depending
+  on the chosen foundation. Do not run an experimental system VPN inside the
+  managed development environment; use an appropriate isolated test machine.
+  Gate: Actual route, DNS, reconnect, revocation and failure behavior are verified.
+
+Task 4: Define the minimum owned control API and credential lifecycle.
+  Gate: Device/grant authorization and revocation are server-enforced and tested;
+  configuration is versioned; secrets are not embedded in clients.
+
+Task 5: Build and test the Chrome proxy proof.
+  Gate: Correct authentication origin, encrypted proxy transport, real route
+  verification and documented browser leak/failure coverage; no false Connected.
+
+Task 6: Run a private pilot and test release/recovery operations.
+  Gate: Signed artifacts, rollback/restore evidence, actual cost records, known
+  limitations and platform-specific test outcomes. Only then expand scope.
+
+For every task report separately: implemented, tested, manually verified,
+simulated, blocked and deferred. A successful build is not a live route test;
+an existing upstream feature is not automatically a verified feature of our app.
+
+17. SOURCE EVIDENCE AND IMPORTANT BUILD CAUTIONS
+
+Mullvad inspection pointers, relative to build/upstream/mullvad/:
+  README.md; BuildInstructions.md; Cargo.toml; rust-toolchain.toml;
+  mullvad-daemon/src/tunnel.rs (CustomTunnelEndpoint handling);
+  mullvad-types/src/custom_tunnel.rs (custom endpoint capabilities);
+  talpid-core/src/tunnel_state_machine/ (native tunnel-state boundary);
+  mullvad-management-interface/ (local management API);
+  mullvad-api/ (provider API clients); mullvad-update/src/defaults.rs;
+  test/test-manager/ (existing VM-oriented testing infrastructure).
+
+The Cargo feature named custom-vpn is different from the direct custom endpoint.
+Its source describes a second VPN inside Mullvad and warns about private-key
+exposure through desktop management settings. Do not enable it as an assumed
+shortcut for replacing the provider.
+
+Mullvad omitted submodules:
+  dist-assets/binaries
+  ios/wireguard-apple
+Its manifests declare Rust 1.100.0 and desktop Volta pins Node 24.21.0/npm 12.2.0.
+These are inspected declarations, not toolchains validated in this environment.
+
+Amnezia inspection pointers, relative to build/upstream/amnezia/:
+  README.md; CMakeLists.txt; conanfile.py; THIRD_PARTY_LICENSES.md;
+  client/core/installers/; client/core/configurators/;
+  client/core/controllers/; client/server_scripts/; client/tests/; service/.
+
+Amnezia omitted submodules:
+  client/3rd/qtkeychain
+  client/3rd/SortFilterProxyModel
+  client/3rd/amneziawg-apple
+  client/3rd/qtgamepad
+Declared build tools include CMake >=3.25, C++17, Qt >=6.10 and Conan, plus
+target-specific SDKs and dependencies. No native build or test suite has run here.
+
+Archive SHA-256 fingerprints recorded by the existing extraction tool:
+  mullvadvpn-app-main.zip
+    95d77642fd18ded01423c9bf125f22159479dfd058dbb801cf286f425d98ba6f
+  amnezia-client-dev.zip
+    f32e784d47c196158728eee8df7aeef01093df6368ebc72a142d0829a9cebcd0
+These identify the preserved files. They do not by themselves prove upstream
+authenticity, current security, completeness or suitability for distribution.
+
+The immediate next engineering step is complete-source recovery and one native
+build proof. The long-term goal remains both a reliable full-device VPN and a
+clear, trustworthy browser product, expanded worldwide through tested milestones.
