@@ -1,0 +1,24 @@
+# future Node/TS app artifacts
+node_modules/
+dist/
+build/
+coverage/
+.next/
+.wxt/
+.output/
+*.log
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
